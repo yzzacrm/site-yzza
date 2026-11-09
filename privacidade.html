@@ -180,6 +180,52 @@ section[id]{scroll-margin-top:20px}
 .msg.err{color:var(--red-soft)}
 .ok h3{font-size:40px;margin-bottom:14px;letter-spacing:-.04em}
 
+/* hero: módulos do sistema */
+.hero__mods{align-self:center;justify-self:end;display:grid;gap:14px;padding-right:4px}
+.hero__mods li{position:relative;padding-left:18px;font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;line-height:1.3;color:rgba(255,239,228,.82)}
+.hero__mods li::before{position:absolute;left:0;top:.62em;width:8px;height:1px;background:rgba(255,236,222,.92);content:''}
+.hero__mods li.ia{color:#fff;font-weight:500}
+
+/* menu: página atual */
+.nav ul a[aria-current=page]{opacity:1;border-bottom:1px solid var(--red-soft);padding-bottom:5px}
+#drawer a[aria-current=page]{color:var(--red-soft)}
+
+/* prints do sistema */
+.fig{margin:0;min-width:0}
+.shot{border-radius:14px;overflow:hidden;border:1px solid var(--line-d);background:var(--paper);box-shadow:0 50px 120px -30px rgba(0,0,0,.65)}
+.shot img{width:100%;height:auto}
+.cap{margin-top:14px;font-size:14px;line-height:1.45;opacity:.62;max-width:70ch}
+.bigshot{margin-top:56px}
+.feat{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.35fr);gap:clamp(32px,5vw,80px);align-items:center}
+.feat.rev{grid-template-columns:minmax(0,1.35fr) minmax(0,.8fr)}
+.feat.top{grid-template-columns:minmax(0,1fr);gap:48px}
+.feat .t-title{font-size:clamp(30px,3.4vw,50px)}
+.feat .t-lead{font-size:18px}
+.feat.top .head{max-width:62ch}
+.bul{margin-top:28px;max-width:46ch}
+.bul li{border-top:1px solid var(--ln);padding:16px 0}
+.bul b{font-weight:700}.bul span{opacity:.8}
+.more{display:inline-block;margin-top:18px;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:2px;opacity:.9;transition:opacity .2s}
+.more:hover{opacity:1}
+.row .more{margin-top:14px}
+.ia-seal{display:inline-block;vertical-align:middle;margin-left:10px;font:500 10px/1 var(--sans);letter-spacing:.16em;padding:5px 8px;border-radius:999px;background:rgba(255,106,77,.16);color:var(--red-soft)}
+.steps.s5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.steps.s5 p{max-width:22ch}
+.band{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
+.band .t-title{max-width:14ch}
+.phero .t-title{max-width:22ch}
+.phero .t-lead{max-width:58ch}
+
+/* números e índice da página */
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:56px;border-top:1px solid var(--ln)}
+.facts>div{padding:30px 32px 0 0}
+.facts>div+div{border-left:1px solid var(--ln);padding-left:32px}
+.facts strong{display:block;font:500 clamp(48px,6vw,88px)/.9 var(--sans);letter-spacing:-.07em;color:var(--acc)}
+.facts span{display:block;margin-top:12px;font:500 12px/1.3 var(--sans);letter-spacing:.18em;text-transform:uppercase;opacity:.75}
+.anc{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:38px}
+.anc a{font:500 12px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;opacity:.72;padding-bottom:6px;border-bottom:1px solid transparent;transition:opacity .2s,border-color .2s}
+.anc a:hover{opacity:1;border-color:var(--red-soft)}
+
 /* revelação ao rolar */
 html.js .rv{opacity:0;transform:translateY(14px);transition:opacity .55s var(--out),transform .55s var(--out);transition-delay:var(--d,0s)}
 html.js .rv.in{opacity:1;transform:none}
@@ -195,9 +241,10 @@ html.js .rv.in{opacity:1;transform:none}
  .hero__stats{justify-self:start;grid-auto-flow:column;gap:22px;padding-right:0}
  .hero__background{background-position:left top,center,68% center}
  .hero__reveal{background-position:68% center}
- .cols3,.two,.gridx,.case,.close,.contact{grid-template-columns:1fr}
+ .cols3,.two,.gridx,.case,.close,.contact,.facts{grid-template-columns:1fr}
  .cols3>div{padding:26px 0}
- .cols3>div+div,.two>div+div{border-left:0;border-top:1px solid var(--ln);padding-left:0}
+ .cols3>div+div,.two>div+div,.facts>div+div{border-left:0;border-top:1px solid var(--ln);padding-left:0}
+ .facts>div{padding:26px 0}
  .two>div{padding:26px 0}
  .row{grid-template-columns:56px 1fr;gap:6px 16px}
  .row .n{font-size:40px}
@@ -222,6 +269,18 @@ html.js .rv.in{opacity:1;transform:none}
  .stat span{font-size:.58rem;letter-spacing:.14em}
  .steps{grid-template-columns:1fr}
 }
+@media (max-width:1100px){.steps.s5{grid-template-columns:repeat(2,minmax(0,1fr))}.nav ul{gap:16px}}
+@media (max-width:900px){
+ .hero__mods{justify-self:start;grid-template-columns:1fr;gap:10px;padding-right:0}
+ .hero__hint{display:none!important}
+ .feat,.feat.rev{grid-template-columns:1fr}
+ .feat.rev .fig{order:2}
+ .band{align-items:flex-start}
+}
+@media (max-width:680px){
+ .hero__mods li{font-size:.6rem;letter-spacing:.14em;padding-left:14px}
+ .steps.s5{grid-template-columns:1fr}
+}
 @media (prefers-reduced-motion:reduce){
  html{scroll-behavior:auto}
  html.js .rv{opacity:1;transform:none;transition:none}
@@ -233,11 +292,11 @@ html.js .rv.in{opacity:1;transform:none}
 <body>
 <header class="nav" role="banner">
 <a class="logo" href="index.html" aria-label="Yzza CRM, início"><img src="logo-yzza-branco.png" alt="Yzza" width="73" height="26"></a>
-<ul><li><a href="index.html#caminho">Como funciona</a></li><li><a href="index.html#jornada">Jornada</a></li><li><a href="index.html#equipe">Sua equipe</a></li><li><a href="index.html#confianca">Segurança</a></li></ul>
+<ul><li><a href="quem-somos.html">Quem somos</a></li><li><a href="crm.html">O CRM</a></li><li><a href="ia.html">IA</a></li><li><a href="seguranca.html">Segurança</a></li><li><a href="como-comecamos.html">Como começamos</a></li></ul>
 <a class="btn btn-red" href="contato.html">Desenhar meu mapa</a>
 <button class="menu-btn" type="button" aria-expanded="false" aria-controls="drawer">Menu</button>
 </header>
-<nav id="drawer" aria-label="Menu"><a href="index.html#caminho">Como funciona</a><a href="index.html#jornada">Jornada</a><a href="index.html#equipe">Sua equipe</a><a href="index.html#confianca">Segurança</a><a class="btn btn-red" href="contato.html">Quero desenhar meu mapa</a></nav>
+<nav id="drawer" aria-label="Menu"><a href="quem-somos.html">Quem somos</a><a href="crm.html">O CRM</a><a href="ia.html">IA</a><a href="seguranca.html">Segurança</a><a href="como-comecamos.html">Como começamos</a><a class="btn btn-red" href="contato.html">Quero desenhar meu mapa</a></nav>
 <main>
 <section class="sec phero">
 <div class="wrap legal">
@@ -259,12 +318,8 @@ html.js .rv.in{opacity:1;transform:none}
 </main>
 <footer class="foot">
 <div class="wrap">
-<div><img src="logo-yzza-branco.png" alt="Yzza" width="83" height="30"><p>Todo lead atendido em segundos e no lugar certo da jornada.</p></div>
-<div><h4>Navegar</h4><ul>
-<li><a href="index.html#caminho">Como funciona</a></li>
-<li><a href="index.html#jornada">Jornada</a></li>
-<li><a href="index.html#equipe">Sua equipe</a></li>
-<li><a href="index.html#confianca">Segurança</a></li></ul></div>
+<div><img src="logo-yzza-branco.png" alt="Yzza" width="83" height="30"><p>O CRM que organiza a sua venda inteira, com IA onde ela ajuda.</p></div>
+<div><h4>Navegar</h4><ul><li><a href="quem-somos.html">Quem somos</a></li><li><a href="crm.html">O CRM</a></li><li><a href="ia.html">IA</a></li><li><a href="seguranca.html">Segurança</a></li><li><a href="como-comecamos.html">Como começamos</a></li></ul></div>
 <div><h4>Falar com a Yzza</h4><ul>
 <li><a href="contato.html">Desenhar meu mapa</a></li>
 <li><a href="privacidade.html">Privacidade</a></li></ul></div>
@@ -288,7 +343,7 @@ html.js .rv.in{opacity:1;transform:none}
     d.addEventListener('keydown', function (e) { if (e.key === 'Escape') setM(false); });
   }
   /* revelação ao rolar */
-  var sel = '.t-label,.t-title,.t-lead,.row,.stair,.item,.steps li,.cols3>div,.two>div,.case>*,.case li,.legal>*,.after li,.form,.close>*,.note';
+  var sel = '.t-label,.t-title,.t-lead,.row,.stair,.item,.steps li,.cols3>div,.two>div,.case>*,.case li,.legal>*,.after li,.form,.close>*,.note,.fig,.bul li';
   var els = [].slice.call(d.querySelectorAll(sel)).filter(function (el) { return !el.closest('.hero'); });
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {

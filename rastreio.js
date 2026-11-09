@@ -4,6 +4,11 @@
   var CHAVE = 'yzza_rastreio';
   var NOMES = {
     'index': 'Home',
+    'quem-somos': 'Quem somos',
+    'crm': 'O CRM',
+    'ia': 'IA de atendimento',
+    'seguranca': 'Segurança',
+    'como-comecamos': 'Como começamos',
     'contato': 'Contato',
     'privacidade': 'Privacidade'
   };

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://yzzacrm.com.br/sitemap.xml
