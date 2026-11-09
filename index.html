@@ -69,7 +69,7 @@ section[id]{scroll-margin-top:20px}
 .hero{position:relative;min-height:100svh;overflow:hidden;isolation:isolate;background:#0f0a08;color:var(--cream)}
 .hero__background,.hero__reveal,.hero__grid,.hero__noise,.hero::before,.hero::after{position:absolute;inset:0;content:''}
 .hero__background{z-index:0;background-image:linear-gradient(90deg,rgba(25,10,4,.62) 0%,rgba(25,10,4,.26) 28%,rgba(25,10,4,0) 54%),linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,0) 18%,rgba(0,0,0,.18) 100%),url(hero-humano.webp);background-position:left top,center,64% center;background-repeat:no-repeat;background-size:cover,cover,cover;transform:scale(1.03)}
-.hero__reveal{z-index:1;pointer-events:none;opacity:0;background:url(hero-ia.webp) 64% center/cover no-repeat;-webkit-mask-image:radial-gradient(circle 260px at var(--mx,50%) var(--my,50%),#fff 0,#fff 40%,rgba(255,255,255,.75) 60%,rgba(255,255,255,.4) 75%,rgba(255,255,255,.12) 88%,transparent 100%);mask-image:radial-gradient(circle 260px at var(--mx,50%) var(--my,50%),#fff 0,#fff 40%,rgba(255,255,255,.75) 60%,rgba(255,255,255,.4) 75%,rgba(255,255,255,.12) 88%,transparent 100%);transition:opacity .18s ease;transform:scale(1.03)}
+.hero__reveal{z-index:1;pointer-events:none;opacity:0;background:url(hero-ia.webp) 64% center/cover no-repeat;-webkit-mask-image:radial-gradient(circle var(--r,260px) at var(--mx,50%) var(--my,50%),#fff 0,#fff 40%,rgba(255,255,255,.75) 60%,rgba(255,255,255,.4) 75%,rgba(255,255,255,.12) 88%,transparent 100%);mask-image:radial-gradient(circle var(--r,260px) at var(--mx,50%) var(--my,50%),#fff 0,#fff 40%,rgba(255,255,255,.75) 60%,rgba(255,255,255,.4) 75%,rgba(255,255,255,.12) 88%,transparent 100%);transition:opacity .18s ease;transform:scale(1.03)}
 .hero--hovering .hero__reveal{opacity:1}
 .hero__grid{z-index:2;width:100%;height:100%;opacity:.1;pointer-events:none}
 .hero::before{z-index:0;background:radial-gradient(circle at 6% 12%,rgba(255,173,60,.45) 0,rgba(255,173,60,0) 16%),radial-gradient(circle at 88% 10%,rgba(166,15,15,.18) 0,rgba(166,15,15,0) 20%)}
@@ -257,10 +257,12 @@ html.js .rv.in{opacity:1;transform:none}
  .case{gap:30px;margin-top:60px}
 }
 @media (max-width:680px){
- .hero{min-height:740px}
- .hero__shell{padding:96px 24px 36px;align-items:flex-end}
- .hero__background{background-image:linear-gradient(180deg,rgba(10,6,5,.2) 0%,rgba(10,6,5,.5) 40%,rgba(10,6,5,.92) 100%),linear-gradient(90deg,rgba(10,6,5,.62) 0%,rgba(10,6,5,.34) 36%,rgba(10,6,5,.14) 62%,rgba(10,6,5,.22) 100%),url(hero-humano.webp);background-position:center top,center,61% center}
- .hero__reveal{background-position:61% center}
+ .hero{min-height:0}
+ .hero__shell{min-height:0;padding:430px 24px 44px;align-items:flex-start}
+ .hero__background,.hero__reveal{bottom:auto;height:640px;background-position:center top,center,62% top;transform:none}
+ .hero__background{background-image:linear-gradient(180deg,rgba(15,10,8,0) 52%,rgba(15,10,8,.78) 80%,#0f0a08 100%),linear-gradient(180deg,rgba(0,0,0,.28) 0%,rgba(0,0,0,0) 22%),url(hero-humano.webp);background-position:center,center,62% top}
+ .hero__reveal{background-position:62% top;--r:150px;-webkit-mask-image:radial-gradient(circle var(--r,150px) at var(--mx,50%) var(--my,50%),#fff 0,#fff 45%,rgba(255,255,255,.7) 65%,rgba(255,255,255,.25) 85%,transparent 100%),linear-gradient(180deg,#000 0,#000 52%,transparent 80%);-webkit-mask-composite:source-in;mask-image:radial-gradient(circle var(--r,150px) at var(--mx,50%) var(--my,50%),#fff 0,#fff 45%,rgba(255,255,255,.7) 65%,rgba(255,255,255,.25) 85%,transparent 100%),linear-gradient(180deg,#000 0,#000 52%,transparent 80%);mask-composite:intersect}
+ .hero__grid{height:640px}
  .hero__copy h1{font-size:clamp(2.2rem,9.4vw,3rem);line-height:.98;text-shadow:0 8px 28px rgba(0,0,0,.34)}
  .hero__text{font-size:.98rem;line-height:1.55;color:rgba(255,242,234,.9);text-shadow:0 6px 18px rgba(0,0,0,.28)}
  .hero__stats{gap:16px}
@@ -466,7 +468,61 @@ html.js .rv.in{opacity:1;transform:none}
   var grid = hero.querySelector('#grid');
   var fino = window.matchMedia && matchMedia('(pointer:fine)').matches;
   var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches;
-  if (!bg || !reveal || !fino || calmo) return;
+  if (!bg || !reveal || calmo) return;
+
+  /* Celular e tablet (sem mouse): a IA passeia sozinha pelo rosto e acompanha o dedo ao tocar */
+  if (!fino) {
+    var vivo = true, tocando = false, volta = 0, t0 = performance.now();
+    var pos = { x: 0, y: 0 }, alvo = { x: 0, y: 0 }, raio = 150, rafM = 0;
+    var estreito = function () { return window.innerWidth <= 680; };
+    function areaRosto() {
+      var r = hero.getBoundingClientRect(), h = reveal.offsetHeight || r.height;
+      var e = estreito();
+      return { w: r.width, h: h, cx: r.width * (e ? 0.5 : 0.62), cy: h * (e ? 0.27 : 0.32), top: r.top, left: r.left };
+    }
+    function passo(agora) {
+      var a = areaRosto(), t = (agora - t0) / 1000;
+      if (!tocando) {
+        var amp = estreito() ? a.w * 0.26 : a.w * 0.14;
+        alvo.x = a.cx + Math.sin(t * 0.7) * amp;
+        alvo.y = a.cy + Math.sin(t * 1.05 + 1.2) * a.h * 0.13;
+      }
+      if (!pos.x && !pos.y) { pos.x = alvo.x; pos.y = alvo.y; }
+      var k = tocando ? 0.28 : 0.07;
+      pos.x += (alvo.x - pos.x) * k;
+      pos.y += (alvo.y - pos.y) * k;
+      var base = estreito() ? 150 : 230;
+      var r = base * (tocando ? 1.12 : 1 + Math.sin(t * 1.6) * 0.1);
+      raio += (r - raio) * 0.12;
+      reveal.style.setProperty('--mx', pos.x.toFixed(1) + 'px');
+      reveal.style.setProperty('--my', pos.y.toFixed(1) + 'px');
+      reveal.style.setProperty('--r', raio.toFixed(1) + 'px');
+      rafM = vivo ? requestAnimationFrame(passo) : 0;
+    }
+    function dedo(e) {
+      var p = e.touches && e.touches[0]; if (!p) return;
+      var a = areaRosto();
+      var x = p.clientX - a.left, y = p.clientY - a.top;
+      if (y > a.h) return;
+      tocando = true; clearTimeout(volta);
+      alvo.x = x; alvo.y = y;
+    }
+    function solta() { clearTimeout(volta); volta = setTimeout(function () { tocando = false; }, 1400); }
+    hero.addEventListener('touchstart', dedo, { passive: true });
+    hero.addEventListener('touchmove', dedo, { passive: true });
+    hero.addEventListener('touchend', solta, { passive: true });
+    hero.addEventListener('touchcancel', solta, { passive: true });
+    hero.classList.add('hero--hovering');
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        vivo = es[0].isIntersecting;
+        if (vivo && !rafM) rafM = requestAnimationFrame(passo);
+      }).observe(hero);
+    }
+    rafM = requestAnimationFrame(passo);
+    return;
+  }
+  if (!fino) return;
 
   var raw = { x: 0, y: 0 }, suave = { x: 0, y: 0 }, grade = { x: 0, y: 0 };
   var dentro = false, raf = 0;
