@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<script>if(/^http:$/.test(location.protocol)&&/(^|\.)yzzacrm\.com\.br$/.test(location.hostname)){location.replace(location.href.replace(/^http:/,'https:'))}</script>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yzza CRM | Todo lead atendido em segundos, no lugar certo da jornada</title>
+<meta name="description" content="A Yzza reúne o formulário do site, o WhatsApp, o Kanban e uma IA de primeiro atendimento num só sistema, montado em volta do mapa de jornada do seu negócio.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" type="image/png" href="favicon-48.png">
+<link rel="preload" href="space-grotesk-700.woff2" as="font" type="font/woff2" crossorigin>
+<script>document.documentElement.className+=' js';</script>
+<style>
+@font-face{font-family:'Space Grotesk';font-weight:400;font-style:normal;font-display:swap;src:url(space-grotesk-400.woff2) format('woff2')}
+@font-face{font-family:'Space Grotesk';font-weight:500;font-style:normal;font-display:swap;src:url(space-grotesk-500.woff2) format('woff2')}
+@font-face{font-family:'Space Grotesk';font-weight:700;font-style:normal;font-display:swap;src:url(space-grotesk-700.woff2) format('woff2')}
+:root{--ink:#09090a;--alt:#110c0a;--paper:#F4F2ED;--white:#fff;--cream:#fff7f1;--muted:rgba(255,245,238,.72);--red:#E00000;--red-soft:#FF6A4D;--orange:#ff7a00;--line-d:rgba(255,255,255,.14);--line-l:rgba(10,10,10,.16);--pad:clamp(24px,5.6vw,80px);--max:1280px;--out:cubic-bezier(.23,1,.32,1);--sans:'Space Grotesk',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font:400 17px/1.55 var(--sans);background:var(--ink);color:var(--cream);-webkit-font-smoothing:antialiased;min-width:320px}
+body.lock{overflow:hidden}
+img,video{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+ol,ul{list-style:none}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+
+/* tipografia */
+.t-title{font:700 clamp(34px,4.4vw,66px)/.98 var(--sans);letter-spacing:-.045em;text-wrap:balance}
+.t-label{font:500 11.5px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:22px;color:var(--acc)}
+.t-label::before{content:'';width:28px;height:1px;background:var(--acc)}
+.t-lead{font-size:19px;line-height:1.5;max-width:46ch;opacity:.78;margin-top:22px}
+h3{font:700 22px/1.1 var(--sans);letter-spacing:-.025em}
+p+p{margin-top:12px}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:500 15px/1 var(--sans);padding:17px 26px;min-height:48px;border-radius:999px;border:1px solid transparent;cursor:pointer;transition:transform .35s var(--out),background .25s,color .25s,border-color .25s,filter .25s}
+.btn:hover{transform:translateY(-2px)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#ff1a1a}
+.btn-cream{color:#9f3300;background:linear-gradient(180deg,#ffe4bf 0%,#ffd194 48%,#ffb65d 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 20px 60px rgba(0,0,0,.22)}
+.btn-cream:hover{filter:brightness(1.04)}
+.btn-line{border-color:currentColor}
+.btn-line:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.sec .btn-line:hover{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+.sec.light .btn-line:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:34px}
+
+/* menu */
+.nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;width:min(1120px,calc(100% - 32px));display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 12px 10px 22px;border-radius:999px;background:rgba(9,9,10,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--cream);border:1px solid var(--line-d)}
+.nav .logo img{height:26px;width:auto}
+.nav ul{display:flex;gap:30px}
+.nav ul a{font:500 13px/1 var(--sans);letter-spacing:.02em;opacity:.8;transition:opacity .2s}
+.nav ul a:hover{opacity:1}
+.nav .btn{padding:13px 20px;min-height:0;font-size:14px}
+.menu-btn{display:none;font:500 13px/1 var(--sans);color:var(--cream);background:none;border:1px solid var(--line-d);border-radius:999px;padding:12px 18px;cursor:pointer}
+#drawer{position:fixed;inset:0;z-index:40;background:var(--ink);padding:110px var(--pad) 40px;display:none;flex-direction:column;gap:6px}
+#drawer.open{display:flex}
+#drawer a{font:700 34px/1.1 var(--sans);letter-spacing:-.03em;padding:12px 0;border-bottom:1px solid var(--line-d)}
+#drawer a.btn{font:500 15px/1 var(--sans);letter-spacing:0;border-bottom:0;margin-top:24px;padding:18px}
+
+/* seções */
+.sec{background:var(--ink);color:var(--cream);--ln:var(--line-d);--acc:var(--red-soft);padding:clamp(80px,11vw,150px) 0}
+.sec.alt{background:var(--alt)}
+.sec.light{background:var(--paper);color:var(--ink);--ln:var(--line-l);--acc:var(--red)}
+section[id]{scroll-margin-top:20px}
+
+/* hero (visual hero05: retrato, revelação do robô ao passar o mouse, grade e granulado) */
+.hero{position:relative;min-height:100svh;overflow:hidden;isolation:isolate;background:#0f0a08;color:var(--cream)}
+.hero__background,.hero__reveal,.hero__grid,.hero__noise,.hero::before,.hero::after{position:absolute;inset:0;content:''}
+.hero__background{z-index:0;background-image:linear-gradient(90deg,rgba(25,10,4,.62) 0%,rgba(25,10,4,.26) 28%,rgba(25,10,4,0) 54%),linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,0) 18%,rgba(0,0,0,.18) 100%),url(hero-humano.webp);background-position:left top,center,64% center;background-repeat:no-repeat;background-size:cover,cover,cover;transform:scale(1.03)}
+.hero__reveal{z-index:1;pointer-events:none;opacity:0;background:url(hero-ia.webp) 64% center/cover no-repeat;-webkit-mask-image:radial-gradient(circle 260px at var(--mx,50%) var(--my,50%),#fff 0,#fff 40%,rgba(255,255,255,.75) 60%,rgba(255,255,255,.4) 75%,rgba(255,255,255,.12) 88%,transparent 100%);mask-image:radial-gradient(circle 260px at var(--mx,50%) var(--my,50%),#fff 0,#fff 40%,rgba(255,255,255,.75) 60%,rgba(255,255,255,.4) 75%,rgba(255,255,255,.12) 88%,transparent 100%);transition:opacity .18s ease;transform:scale(1.03)}
+.hero--hovering .hero__reveal{opacity:1}
+.hero__grid{z-index:2;width:100%;height:100%;opacity:.1;pointer-events:none}
+.hero::before{z-index:0;background:radial-gradient(circle at 6% 12%,rgba(255,173,60,.45) 0,rgba(255,173,60,0) 16%),radial-gradient(circle at 88% 10%,rgba(166,15,15,.18) 0,rgba(166,15,15,0) 20%)}
+.hero::after{z-index:4;background:linear-gradient(180deg,rgba(255,255,255,.05) 0,rgba(255,255,255,0) 8%);mix-blend-mode:screen;opacity:.35;pointer-events:none}
+.hero__noise{z-index:3;opacity:.14;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.4) .65px,transparent .65px),radial-gradient(rgba(0,0,0,.22) .65px,transparent .65px);background-position:0 0,12px 12px;background-size:24px 24px;mix-blend-mode:soft-light}
+.hero__shell{position:relative;z-index:5;min-height:100svh;padding:110px clamp(24px,5vw,72px) 56px;display:flex;align-items:center;max-width:1440px;margin:0 auto}
+.hero__content{flex:1;display:grid;grid-template-columns:minmax(0,640px) auto;align-items:center;justify-content:space-between;gap:44px;width:100%}
+.hero__copy{max-width:640px}
+.hero__eyebrow{margin:0 0 18px;text-transform:uppercase;letter-spacing:.22em;font-size:.7rem;color:rgba(255,238,227,.8)}
+.hero__copy h1{margin:0;font:700 clamp(2.5rem,4.7vw,4.4rem)/.96 var(--sans);letter-spacing:-.05em;text-wrap:pretty}
+.hero__text{max-width:460px;margin:22px 0 0;font-size:1.02rem;line-height:1.5;color:var(--muted)}
+.hero__link{font-weight:500;color:var(--cream);border-bottom:1px solid rgba(255,247,241,.5);padding-bottom:3px;transition:border-color .2s}
+.hero__link:hover{border-color:var(--cream)}
+.hero__stats{align-self:center;justify-self:end;display:grid;gap:26px;padding-right:4px}
+.stat{position:relative;padding-left:18px;text-align:left}
+.stat::before{position:absolute;left:0;top:7px;width:8px;height:1px;background:rgba(255,236,222,.92);content:''}
+.stat strong{display:block;font-size:clamp(2rem,3.2vw,3.25rem);font-weight:500;line-height:.9;letter-spacing:-.07em}
+.stat span{display:block;margin-top:7px;font-size:.68rem;text-transform:uppercase;letter-spacing:.18em;color:rgba(255,239,228,.72);max-width:20ch;line-height:1.35}
+.hero__hint{position:absolute;z-index:5;left:clamp(24px,5vw,72px);bottom:26px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,238,227,.6);display:none}
+@media (pointer:fine){.hero__hint{display:block}}
+
+/* problema */
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:64px;border-top:1px solid var(--ln)}
+.cols3>div{padding:30px 32px 0 0}
+.cols3>div+div{border-left:1px solid var(--ln);padding-left:32px}
+.cols3 h3{margin-bottom:16px}
+.cols3 p{opacity:.78;max-width:30ch}
+
+/* linhas numeradas */
+.rows{margin-top:56px}
+.row{display:grid;grid-template-columns:96px minmax(0,1fr) minmax(0,1.25fr);gap:24px;padding:34px 0;border-top:1px solid var(--ln);align-items:start}
+.row:last-child{border-bottom:1px solid var(--ln)}
+.row .n{font:500 52px/.9 var(--sans);letter-spacing:-.07em;color:var(--acc)}
+.row p{opacity:.8;max-width:46ch}
+
+/* degraus */
+.stairs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;margin-top:70px;border-bottom:1px solid var(--ln)}
+.stair{border-top:2px solid var(--acc);padding:26px 28px 34px 0}
+.stair+.stair{border-left:1px solid var(--ln);padding-left:28px}
+.stair .k{font:500 11px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--acc);display:block;margin-bottom:16px}
+.stair h3{font-size:28px;margin-bottom:14px;letter-spacing:-.035em}
+.stair p{opacity:.8;max-width:30ch}
+.stair .tags{margin-top:18px;font:500 12px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+.s1{min-height:300px}.s2{min-height:390px}.s3{min-height:480px}
+.here{display:inline-block;margin-top:20px;background:var(--red);color:#fff;font:500 13px/1 var(--sans);padding:10px 16px;border-radius:999px}
+.note{margin-top:18px;font:500 11px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;opacity:.55}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:56px;border-top:1px solid var(--ln)}
+.two>div{padding:30px 40px 0 0}
+.two>div+div{border-left:1px solid var(--ln);padding-left:40px}
+.two h3{margin-bottom:14px}
+.two p{opacity:.8;max-width:40ch}
+
+/* depois da venda e como começamos */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:56px;counter-reset:s}
+.steps li{counter-increment:s;border-top:2px solid var(--acc);padding:22px 28px 0 0}
+.steps li::before{content:'0' counter(s);display:block;font:500 40px/1 var(--sans);letter-spacing:-.07em;color:var(--acc);margin-bottom:18px}
+.steps h3{font-size:21px;margin-bottom:10px}
+.steps p{opacity:.8;font-size:16px;max-width:26ch}
+
+/* itens em duas colunas */
+.gridx{display:grid;grid-template-columns:1fr 1fr;column-gap:56px;margin-top:56px}
+.item{border-top:1px solid var(--ln);padding:28px 0 34px}
+.item h3{font-size:24px;margin-bottom:12px}
+.item p{opacity:.8;max-width:44ch}
+
+/* caso */
+.case{margin-top:90px;border-top:2px solid var(--acc);padding-top:30px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px}
+.case h2{font:700 clamp(34px,4vw,56px)/.98 var(--sans);letter-spacing:-.045em}
+.case li{border-top:1px solid var(--ln);padding:18px 0}
+.case li:first-child{border-top:0;padding-top:0}
+.case li b{font-weight:700}
+.case li span{opacity:.8}
+
+/* fechamento */
+.close{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:48px;align-items:center}
+.close video{width:100%;background:#fff}
+#proximo{background:#fff}
+
+/* rodapé */
+.foot{background:var(--ink);color:var(--cream);padding:70px 0 36px;border-top:1px solid var(--line-d)}
+.foot .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+.foot img{height:30px;width:auto}
+.foot p{opacity:.7;max-width:34ch;margin-top:16px;font-size:16px}
+.foot h4{font:500 11px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--red-soft);margin-bottom:16px}
+.foot li a{display:inline-block;padding:5px 0;opacity:.8}
+.foot li a:hover{opacity:1}
+.foot .base{grid-column:1/-1;border-top:1px solid var(--line-d);padding-top:24px;font:500 11px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;opacity:.5}
+
+/* páginas internas */
+.phero{padding:170px 0 80px}
+.legal{max-width:760px}
+.legal h3{margin:44px 0 12px}
+.legal p,.legal li{opacity:.85}
+.contact{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(32px,6vw,96px);align-items:start}
+.after li{display:grid;grid-template-columns:48px 1fr;gap:6px;border-top:1px solid var(--ln);padding:20px 0}
+.after li b{font:500 30px/1 var(--sans);letter-spacing:-.06em;color:var(--acc)}
+.form label{display:block;font:500 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--red-soft);margin:26px 0 4px}
+.form input[type=text],.form input[type=email],.form input[type=tel],.form select{width:100%;font:500 19px/1.3 var(--sans);background:transparent;color:var(--cream);border:0;border-bottom:1.5px solid var(--line-d);border-radius:0;padding:10px 0;outline:0;transition:border-color .2s;color-scheme:dark}
+.form input:focus,.form select:focus{border-color:var(--red-soft)}
+.form select option{background:#111;color:#fff}
+.form .ck{display:flex;gap:12px;align-items:flex-start;margin-top:30px;font-size:15px;line-height:1.45}
+.form .ck input{margin-top:4px;accent-color:var(--red);width:18px;height:18px;flex:none}
+.form .ck label{all:unset;font-size:15px;cursor:pointer}
+.form .hp{position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden}
+.form button{margin-top:34px}
+.form button[disabled]{opacity:.6;cursor:wait}
+.msg{margin-top:22px;font-size:16px;min-height:1.4em}
+.msg.err{color:var(--red-soft)}
+.ok h3{font-size:40px;margin-bottom:14px;letter-spacing:-.04em}
+
+/* revelação ao rolar */
+html.js .rv{opacity:0;transform:translateY(14px);transition:opacity .55s var(--out),transform .55s var(--out);transition-delay:var(--d,0s)}
+html.js .rv.in{opacity:1;transform:none}
+
+@media (max-width:1100px){
+ .nav ul{gap:20px}
+ .steps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:40px}
+}
+@media (max-width:900px){
+ .nav ul,.nav .btn{display:none}
+ .menu-btn{display:block}
+ .hero__content{grid-template-columns:1fr;gap:30px}
+ .hero__stats{justify-self:start;grid-auto-flow:column;gap:22px;padding-right:0}
+ .hero__background{background-position:left top,center,68% center}
+ .hero__reveal{background-position:68% center}
+ .cols3,.two,.gridx,.case,.close,.contact{grid-template-columns:1fr}
+ .cols3>div{padding:26px 0}
+ .cols3>div+div,.two>div+div{border-left:0;border-top:1px solid var(--ln);padding-left:0}
+ .two>div{padding:26px 0}
+ .row{grid-template-columns:56px 1fr;gap:6px 16px}
+ .row .n{font-size:40px}
+ .row p{grid-column:2}
+ .stairs{grid-template-columns:1fr;border-bottom:0}
+ .stair{min-height:0!important;padding:24px 0 30px}
+ .stair+.stair{border-left:0}
+ .s2{margin-left:22px}.s3{margin-left:44px}
+ .foot .wrap{grid-template-columns:1fr}
+ .case{gap:30px;margin-top:60px}
+}
+@media (max-width:680px){
+ .hero{min-height:740px}
+ .hero__shell{padding:96px 24px 36px;align-items:flex-end}
+ .hero__background{background-image:linear-gradient(180deg,rgba(10,6,5,.2) 0%,rgba(10,6,5,.5) 40%,rgba(10,6,5,.92) 100%),linear-gradient(90deg,rgba(10,6,5,.62) 0%,rgba(10,6,5,.34) 36%,rgba(10,6,5,.14) 62%,rgba(10,6,5,.22) 100%),url(hero-humano.webp);background-position:center top,center,61% center}
+ .hero__reveal{background-position:61% center}
+ .hero__copy h1{font-size:clamp(2.2rem,9.4vw,3rem);line-height:.98;text-shadow:0 8px 28px rgba(0,0,0,.34)}
+ .hero__text{font-size:.98rem;line-height:1.55;color:rgba(255,242,234,.9);text-shadow:0 6px 18px rgba(0,0,0,.28)}
+ .hero__stats{gap:16px}
+ .stat{padding-left:14px}
+ .stat strong{font-size:1.6rem}
+ .stat span{font-size:.58rem;letter-spacing:.14em}
+ .steps{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ html.js .rv{opacity:1;transform:none;transition:none}
+ *{transition-duration:.01ms!important}
+}
+
+</style>
+</head>
+<body>
+<header class="nav" role="banner">
+<a class="logo" href="#topo" aria-label="Yzza CRM, início"><img src="logo-yzza-branco.png" alt="Yzza" width="73" height="26"></a>
+<ul><li><a href="#caminho">Como funciona</a></li><li><a href="#jornada">Jornada</a></li><li><a href="#equipe">Sua equipe</a></li><li><a href="#confianca">Segurança</a></li></ul>
+<a class="btn btn-red" href="contato.html">Desenhar meu mapa</a>
+<button class="menu-btn" type="button" aria-expanded="false" aria-controls="drawer">Menu</button>
+</header>
+<nav id="drawer" aria-label="Menu"><a href="#caminho">Como funciona</a><a href="#jornada">Jornada</a><a href="#equipe">Sua equipe</a><a href="#confianca">Segurança</a><a class="btn btn-red" href="contato.html">Quero desenhar meu mapa</a></nav>
+<main>
+<section class="hero" id="topo" aria-label="Apresentação da Yzza">
+<div class="hero__background" aria-hidden="true"></div>
+<div class="hero__reveal" aria-hidden="true"></div>
+<svg class="hero__grid" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none">
+<defs><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse" x="0" y="0"><path d="M 48 0 L 0 0 0 48" fill="none" stroke="#64748b" stroke-width="0.6"/></pattern></defs>
+<rect width="100%" height="100%" fill="url(#grid)"/>
+</svg>
+<div class="hero__noise" aria-hidden="true"></div>
+<div class="hero__shell">
+<div class="hero__content">
+<div class="hero__copy">
+<p class="hero__eyebrow">Yzza CRM</p>
+<h1>Todo lead atendido em segundos e já no lugar certo da jornada.</h1>
+<p class="hero__text">A Yzza reúne o formulário do site, o WhatsApp, o Kanban e uma IA de primeiro atendimento num só sistema, montado em volta do mapa de jornada do seu negócio.</p>
+<div class="cta-row"><a class="btn btn-cream" href="contato.html">Quero desenhar meu mapa</a><a class="hero__link" href="#caminho">Ver como funciona</a></div>
+</div>
+<aside class="hero__stats" aria-label="O sistema em números">
+<div class="stat"><strong>5</strong><span>passos do formulário até a equipe</span></div>
+<div class="stat"><strong>1</strong><span>mapa de jornada por empresa</span></div>
+<div class="stat"><strong>14</strong><span>dias de backup diário</span></div>
+</aside>
+</div>
+</div>
+<p class="hero__hint" aria-hidden="true">Passe o mouse sobre a imagem</p>
+</section>
+
+<section class="sec" id="problema">
+<div class="wrap">
+<p class="t-label">O problema</p>
+<h2 class="t-title">Onde a venda se perde antes de começar</h2>
+<p class="t-lead">Na maioria das empresas o marketing gera o lead e o comercial corre atrás. No meio do caminho, três coisas acontecem.</p>
+<div class="cols3">
+<div><h3>O lead espera</h3><p>O contato entra à noite ou no fim de semana e só é respondido horas depois. Quando a equipe chega, ele já falou com outro.</p></div>
+<div><h3>Ninguém sabe onde ele está</h3><p>Cada vendedor tem a sua leitura. Não existe um mapa único que diga se o lead é iniciante, está crescendo ou já precisa de algo maior.</p></div>
+<div><h3>Fechar vira ponto final</h3><p>O cliente compra o primeiro plano e some da agenda. A oportunidade de vender o próximo plano depende da memória de alguém.</p></div>
+</div>
+</div>
+</section>
+
+<section class="sec alt" id="caminho">
+<div class="wrap">
+<p class="t-label">O caminho de um lead</p>
+<h2 class="t-title">Do formulário do site até a conversa com a sua equipe</h2>
+<p class="t-lead">Este é o fluxo que roda sem ninguém apertar um botão.</p>
+<div class="rows">
+<div class="row"><span class="n">01</span><h3>O lead preenche o formulário</h3><p>O formulário do seu site envia o contato direto para o CRM. Se a pessoa já existe, o sistema reconhece pelo WhatsApp ou e-mail e não cria duplicado. O aceite de contato fica registrado como prova.</p></div>
+<div class="row"><span class="n">02</span><h3>A IA chama no WhatsApp</h3><p>A primeira mensagem sai em segundos, com o nome da pessoa e o assunto que ela pediu. O sistema confere antes se o número tem WhatsApp.</p></div>
+<div class="row"><span class="n">03</span><h3>Uma pergunta por vez</h3><p>A IA conversa como uma pessoa da sua empresa. Não repete o que o lead já respondeu no formulário e faz perguntas que mostram em que ponto da jornada ele está.</p></div>
+<div class="row"><span class="n">04</span><h3>O plano recomendado aparece no card</h3><p>Com as respostas, a IA posiciona o lead no mapa e marca o plano mais adequado. Qualquer pessoa da equipe vê isso no Kanban, sem abrir a conversa.</p></div>
+<div class="row"><span class="n">05</span><h3>A equipe assume com o resumo pronto</h3><p>Depois de um número definido de mensagens, ou quando o lead pede uma pessoa, a IA repassa a conversa e entrega o resumo e o motivo do repasse.</p></div>
+</div>
+</div>
+</section>
+
+<section class="sec" id="jornada">
+<div class="wrap">
+<p class="t-label">Jornada</p>
+<h2 class="t-title">Um mapa por empresa, desenhado em degraus</h2>
+<p class="t-lead">No começo do projeto desenhamos com você a jornada do seu cliente. O mapa vira o fluxo de trabalho e o Kanban do sistema, e é ele que orienta a IA e a equipe.</p>
+<div class="stairs">
+<div class="stair s1"><span class="k">Degrau 1</span><h3>Quem está começando</h3><p>Entra pelo primeiro plano, o mais simples e acessível do seu catálogo.</p><p class="tags">Atrair · Converter</p></div>
+<div class="stair s2"><span class="k">Degrau 2</span><h3>Quem já vende e quer ordem</h3><p>Precisa organizar processo, atendimento e retenção. O plano seguinte resolve essa dor.</p><p class="tags">Converter · Reter</p><span class="here">Lead da Marina está aqui</span></div>
+<div class="stair s3"><span class="k">Degrau 3</span><h3>Quem quer crescer</h3><p>Já tem a base pronta e busca escala. É o plano de maior valor da jornada.</p><p class="tags">Reter · Crescer</p></div>
+</div>
+<p class="note">Exemplo ilustrativo. Os degraus, as dores e os planos são definidos para o seu negócio.</p>
+<div class="two">
+<div><h3>Dor em quatro linhas</h3><p>Cada degrau responde a uma dor do cliente: atrair, converter, reter ou crescer. A empresa vende o plano certo para a dor que o lead realmente tem.</p></div>
+<div><h3>O lead ocupa o seu lugar</h3><p>Os leads que a empresa já tem entram no mapa. Você enxerga quantos estão em cada degrau e onde o funil está parado.</p></div>
+</div>
+</div>
+</section>
+
+<section class="sec alt" id="depois">
+<div class="wrap">
+<p class="t-label">Depois da venda</p>
+<h2 class="t-title">Fechado não é ponto final</h2>
+<p class="t-lead">Em vez de arquivar o cliente que comprou, o sistema usa o mapa para planejar a próxima venda.</p>
+<ol class="steps">
+<li><h3>Fechou o plano</h3><p>O lead fica na etapa Fechado.</p></li>
+<li><h3>Cumpre o tempo do plano</h3><p>Cada plano tem o seu prazo estimado, definido por você.</p></li>
+<li><h3>O sistema avisa</h3><p>Cria a tarefa de follow-up com uma mensagem sugerida.</p></li>
+<li><h3>Próximo plano</h3><p>O lead sobe para o degrau seguinte, com o plano sugerido no card.</p></li>
+</ol>
+</div>
+</section>
+
+<section class="sec" id="equipe">
+<div class="wrap">
+<p class="t-label">Sua equipe</p>
+<h2 class="t-title">A IA trabalha para o seu time, nunca no lugar dele</h2>
+<div class="gridx">
+<div>
+<div class="item"><h3>Repasse com resumo</h3><p>Quando a IA passa a conversa, a pessoa recebe o motivo, o resumo e as respostas que o lead já deu.</p></div>
+<div class="item"><h3>Você define a voz</h3><p>Nome, tom, regras e o que a IA pode ou não dizer ficam na configuração da sua conta. Ajustes não exigem programador.</p></div>
+<div class="item"><h3>Aprovação nas etapas que importam</h3><p>Mudanças de etapa podem esperar a confirmação de uma pessoa antes de valer.</p></div>
+</div>
+<div>
+<div class="item"><h3>Follow-up que não se perde</h3><p>Lembretes com mensagem sugerida, modelos de mensagem e sequências automáticas para o cliente que ficou parado.</p></div>
+<div class="item"><h3>Kanban que mostra a verdade</h3><p>Etapas, temperatura do lead, degrau da jornada e plano recomendado no mesmo card.</p></div>
+<div class="item"><h3>Acompanhamento externo</h3><p>Seu consultor ou um agente de IA pode acompanhar tudo em modo somente leitura, sem alterar nada e com opção de ocultar telefone e e-mail.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec alt" id="confianca">
+<div class="wrap">
+<p class="t-label">Confiança</p>
+<h2 class="t-title">Seus dados ficam seus</h2>
+<p class="t-lead">O sistema foi montado para atender várias empresas sem misturar nada.</p>
+<div class="gridx">
+<div>
+<div class="item"><h3>Dados isolados por empresa</h3><p>Cada cliente tem o seu espaço, o seu mapa, o seu WhatsApp e a sua IA. Um não enxerga o outro.</p></div>
+<div class="item"><h3>Prova de autorização</h3><p>O aceite do lead no formulário fica registrado junto do contato, para o caso de você precisar comprovar a origem.</p></div>
+</div>
+<div>
+<div class="item"><h3>Backup diário</h3><p>Uma cópia completa do banco de dados e da conexão do WhatsApp é feita toda madrugada e guardada por 14 dias.</p></div>
+<div class="item"><h3>Monitoramento ligado</h3><p>O sistema se vigia a cada poucos minutos e avisa por WhatsApp se algo sair do ar.</p></div>
+</div>
+</div>
+<div class="case">
+<div><p class="t-label">Caso de referência</p><h2>Dom Partner Growth</h2><p class="t-lead">A Dom, do mesmo grupo da Yzza, foi a primeira empresa a rodar a jornada completa no sistema.</p></div>
+<ul>
+<li><b>Mapa próprio:</b> <span>a jornada da Dom foi desenhada degrau a degrau e virou o fluxo de trabalho e o Kanban da conta.</span></li>
+<li><b>Site ligado ao CRM:</b> <span>o formulário do site da Dom envia o contato direto ao sistema e a IA chama no WhatsApp.</span></li>
+<li><b>IA no ar:</b> <span>a IA faz o primeiro atendimento, pergunta o que falta e marca o plano recomendado.</span></li>
+<li><b>Agente do comercial conectado:</b> <span>o agente de IA do comercial da Dom ajusta e acompanha a configuração por um conector seguro.</span></li>
+</ul>
+</div>
+</div>
+</section>
+
+<section class="sec" id="comecar">
+<div class="wrap">
+<p class="t-label">Como começamos</p>
+<h2 class="t-title">Do mapa ao primeiro lead atendido</h2>
+<ol class="steps">
+<li><h3>Desenhamos o mapa da sua jornada</h3><p>Degraus, dores e planos, com o que você já vende hoje.</p></li>
+<li><h3>Conectamos o WhatsApp e o formulário</h3><p>Sem trocar de número e sem refazer o site.</p></li>
+<li><h3>Ajustamos a IA com a voz da sua empresa</h3><p>Nome, tom de voz, perguntas e regras de repasse.</p></li>
+<li><h3>Entramos no ar e acompanhamos juntos</h3><p>Revisamos as conversas reais e refinamos o que for preciso.</p></li>
+</ol>
+</div>
+</section>
+
+<section class="sec light" id="proximo">
+<div class="wrap close">
+<div>
+<p class="t-label">Próximo passo</p>
+<h2 class="t-title">Vamos desenhar o mapa da sua jornada.</h2>
+<p class="t-lead">É o primeiro passo e já mostra onde os seus leads estão parados hoje. A partir dele, o resto do sistema se monta.</p>
+<div class="cta-row"><a class="btn btn-red" href="contato.html">Quero desenhar meu mapa</a></div>
+</div>
+<video class="lz" data-once muted playsinline preload="auto" poster="yzza-abertura-poster.jpg" aria-hidden="true"><source src="yzza-abertura.mp4" type="video/mp4"></video>
+</div>
+</section>
+</main>
+<footer class="foot">
+<div class="wrap">
+<div><img src="logo-yzza-branco.png" alt="Yzza" width="83" height="30"><p>Todo lead atendido em segundos e no lugar certo da jornada.</p></div>
+<div><h4>Navegar</h4><ul>
+<li><a href="index.html#caminho">Como funciona</a></li>
+<li><a href="index.html#jornada">Jornada</a></li>
+<li><a href="index.html#equipe">Sua equipe</a></li>
+<li><a href="index.html#confianca">Segurança</a></li></ul></div>
+<div><h4>Falar com a Yzza</h4><ul>
+<li><a href="contato.html">Desenhar meu mapa</a></li>
+<li><a href="privacidade.html">Privacidade</a></li></ul></div>
+<div class="base">Yzza CRM · yzzacrm.com.br</div>
+</div>
+</footer>
+<script src="rastreio.js"></script>
+<script>
+(function () {
+  var d = document;
+  var b = d.querySelector('.menu-btn'), dr = d.getElementById('drawer');
+  function setM(o) {
+    dr.classList.toggle('open', o);
+    d.body.classList.toggle('lock', o);
+    b.textContent = o ? 'Fechar' : 'Menu';
+    b.setAttribute('aria-expanded', o ? 'true' : 'false');
+  }
+  if (b && dr) {
+    b.addEventListener('click', function () { setM(!dr.classList.contains('open')); });
+    dr.addEventListener('click', function (e) { if (e.target.closest('a')) setM(false); });
+    d.addEventListener('keydown', function (e) { if (e.key === 'Escape') setM(false); });
+  }
+  /* revelação ao rolar */
+  var sel = '.t-label,.t-title,.t-lead,.row,.stair,.item,.steps li,.cols3>div,.two>div,.case>*,.case li,.legal>*,.after li,.form,.close>*,.note';
+  var els = [].slice.call(d.querySelectorAll(sel)).filter(function (el) { return !el.closest('.hero'); });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .05 });
+    els.forEach(function (el) {
+      var irmaos = el.parentElement ? [].slice.call(el.parentElement.children) : [];
+      var i = Math.min(irmaos.indexOf(el), 5);
+      el.style.setProperty('--d', (i * 0.06) + 's');
+      el.classList.add('rv');
+      io.observe(el);
+    });
+    /* vídeo preguiçoso: toca só quando mais de 25% está na tela */
+    var vio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.play && e.target.play().catch(function () {});
+          if (e.target.hasAttribute('data-once')) vio.unobserve(e.target);
+        } else { e.target.pause && e.target.pause(); }
+      });
+    }, { threshold: .25 });
+    [].slice.call(d.querySelectorAll('video.lz')).forEach(function (v) { vio.observe(v); });
+  } else {
+    els.forEach(function (el) { el.classList.add('in'); });
+  }
+})();
+
+</script>
+<script>
+/* Hero: o retrato humano vira o robô dentro de um círculo que segue o cursor.
+   Só em telas com mouse. A grade e a imagem andam um pouco com o cursor (paralaxe). */
+(function () {
+  var hero = document.querySelector('.hero');
+  if (!hero) return;
+  var bg = hero.querySelector('.hero__background');
+  var reveal = hero.querySelector('.hero__reveal');
+  var grid = hero.querySelector('#grid');
+  var fino = window.matchMedia && matchMedia('(pointer:fine)').matches;
+  var calmo = window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if (!bg || !reveal || !fino || calmo) return;
+
+  var raw = { x: 0, y: 0 }, suave = { x: 0, y: 0 }, grade = { x: 0, y: 0 };
+  var dentro = false, raf = 0;
+
+  function centro() {
+    var r = hero.getBoundingClientRect();
+    raw.x = suave.x = r.left + r.width / 2;
+    raw.y = suave.y = r.top + r.height / 2;
+  }
+  function quadro() {
+    var r = hero.getBoundingClientRect();
+    suave.x += (raw.x - suave.x) * 0.1;
+    suave.y += (raw.y - suave.y) * 0.1;
+    var cx = (suave.x - r.left) / r.width - 0.5;
+    var cy = (suave.y - r.top) / r.height - 0.5;
+    grade.x += (cx * 16 - grade.x) * 0.06;
+    grade.y += (cy * 16 - grade.y) * 0.06;
+    if (grid) { grid.setAttribute('x', grade.x.toFixed(2)); grid.setAttribute('y', grade.y.toFixed(2)); }
+    var t = 'scale(1.03) translate(' + (cx * -14) + 'px,' + (cy * -10) + 'px)';
+    bg.style.transform = t;
+    reveal.style.transform = t;
+    reveal.style.setProperty('--mx', (suave.x - r.left) + 'px');
+    reveal.style.setProperty('--my', (suave.y - r.top) + 'px');
+    var parado = !dentro && Math.abs(raw.x - suave.x) < 0.5 && Math.abs(raw.y - suave.y) < 0.5 &&
+      Math.abs(grade.x - cx * 16) < 0.05 && Math.abs(grade.y - cy * 16) < 0.05;
+    raf = parado ? 0 : requestAnimationFrame(quadro);
+  }
+  function liga() { if (!raf) raf = requestAnimationFrame(quadro); }
+
+  centro();
+  hero.addEventListener('mouseenter', function (e) {
+    raw.x = e.clientX; raw.y = e.clientY; dentro = true;
+    hero.classList.add('hero--hovering'); liga();
+  });
+  hero.addEventListener('mousemove', function (e) {
+    raw.x = e.clientX; raw.y = e.clientY; dentro = true;
+    hero.classList.add('hero--hovering'); liga();
+  });
+  hero.addEventListener('mouseleave', function () {
+    dentro = false; hero.classList.remove('hero--hovering'); centro(); liga();
+  });
+  window.addEventListener('resize', function () { if (!dentro) centro(); });
+  /* teste: ?reveal=x,y mostra o círculo naquele ponto (em % da hero) */
+  var q = new URLSearchParams(location.search).get('reveal');
+  if (q) {
+    var p = q.split(',').map(parseFloat), r0 = hero.getBoundingClientRect();
+    raw.x = suave.x = r0.left + r0.width * (p[0] / 100);
+    raw.y = suave.y = r0.top + r0.height * (p[1] / 100);
+    hero.classList.add('hero--hovering'); dentro = true; liga();
+  }
+})();
+
+</script>
+</body>
+</html>
